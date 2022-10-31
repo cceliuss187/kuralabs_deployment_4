@@ -15,6 +15,7 @@ resource "aws_instance" "web_server01" {
   subnet_id = aws_subnet.subnet1.id
   key_name = "jenkins-key"
   vpc_security_group_ids = [aws_security_group.web_ssh.id]
+  associate_public_ip_address = true
 
   user_data = "${file("deploy.sh")}"
 
@@ -24,23 +25,23 @@ resource "aws_instance" "web_server01" {
 }
   
   #EC2-2
-  resource "aws_instance" "web_server02" {
-    ami = "ami-08c40ec9ead489470"
-    instance_type = "t2.micro"
-    subnet_id = aws_subnet.pri_subnet1.id
-    key_name = "jenkins-key"
-    vpc_security_group_ids = [aws_security_group.web_ssh.id]
+  #resource "aws_instance" "web_server02" {
+  #  ami = "ami-08c40ec9ead489470"
+  #  instance_type = "t2.micro"
+  #  subnet_id = aws_subnet.pri_subnet1.id
+  #  key_name = "jenkins-key"
+  #  vpc_security_group_ids = [aws_security_group.web_ssh.id]
 
-    user_data = "${file("deploy.sh")}"
+  #  user_data = "${file("deploy.sh")}"
 
-   tags = {
-    "Name" : "Webserver002"
-  } 
-}
+  # tags = {
+  #  "Name" : "Webserver002"
+  #} 
+#}
 
 # VPC
 resource "aws_vpc" "test-vpc" {
-  cidr_block           = "172.26.0.0/16"
+  cidr_block           = "172.27.0.0/16"
   enable_dns_hostnames = "true"
  
   tags = {
@@ -62,19 +63,19 @@ resource "aws_nat_gateway" "nat_gateway_prob" {
 
 # SUBNET 1
 resource "aws_subnet" "subnet1" {
-  cidr_block              = "172.26.0.0/18"
+  cidr_block              = "172.27.0.0/18"
   vpc_id                  = aws_vpc.test-vpc.id
   map_public_ip_on_launch = "true"
   availability_zone       = data.aws_availability_zones.available.names[0]
 }
  
 # SUBNET 2
-resource "aws_subnet" "pri_subnet1" {
-  cidr_block              = "172.26.64.0/18"
-  vpc_id                  = aws_vpc.test-vpc.id
-  map_public_ip_on_launch = "false"
-  availability_zone       = data.aws_availability_zones.available.names[0]
-}
+#resource "aws_subnet" "pri_subnet1" {
+#  cidr_block              = "172.26.64.0/18"
+#  vpc_id                  = aws_vpc.test-vpc.id
+#  map_public_ip_on_launch = "false"
+#  availability_zone       = data.aws_availability_zones.available.names[0]
+#}
 
 # INTERNET GATEWAY
 resource "aws_internet_gateway" "gw_1" {

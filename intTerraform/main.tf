@@ -25,17 +25,17 @@ resource "aws_instance" "web_server01" {
   
   #EC2-2
   resource "aws_instance" "web_server02" {
-  ami = "ami-08c40ec9ead489470"
-  instance_type = "t2.micro"
-  subnet_id = aws_subnet.pri_subnet1.id
-  vpc_security_group_ids = [aws_security_group.web_ssh.id]
+    ami = "ami-08c40ec9ead489470"
+    instance_type = "t2.micro"
+    subnet_id = aws_subnet.pri_subnet1.id
+    key_name = "jenkins-key"
+    vpc_security_group_ids = [aws_security_group.web_ssh.id]
 
-  key_name = "jenkins-key"
+    user_data = "${file("deploy.sh")}"
 
-  tags = {
-    "Name" : "server-02"
+   tags = {
+    "Name" : "Webserver002"
   } 
-  
 }
 
 # VPC
